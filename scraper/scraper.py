@@ -8,18 +8,11 @@ database_dictionary = {'username': 'group26', 'password': '26group1', 'database'
                         , 'endpoint': 'dbbikes.ccllddmzhx5q.us-east-1.rds.amazonaws.com', 'port': '3306'}
 
 database_schema = {
-    '01_station': {'address': 'VARCHAR(256)', 'banking': 'INTEGER', 'bike_stands': 'INTEGER', 'bonus': 'INTEGER'
+    'station': {'address': 'VARCHAR(256)', 'banking': 'INTEGER', 'bike_stands': 'INTEGER', 'bonus': 'INTEGER'
                     , 'contract_name': 'VARCHAR(256)', 'name': 'VARCHAR(256)', 'number': 'INTEGER', 'position_lat': 'REAL'
                     , 'position_long': 'REAL', 'created_date': 'BIGINT'}
-    , '01_availability': {'number': 'INTEGER', 'available_bikes': 'INTEGER', 'available_bike_stands': 'INTEGER'
+    , 'availability': {'number': 'INTEGER', 'available_bikes': 'INTEGER', 'available_bike_stands': 'INTEGER'
                             , 'last_update': 'BIGINT', 'created_date': 'BIGINT'}
-
-    , '01_weather': {'number': 'INT', 'position_long': 'REAL', 'position_lat': 'REAL', 'weather_id': 'INTEGER', 'main': 'VARCHAR(256)'
-                    , 'description': 'VARCHAR(500)' , 'icon': 'VARCHAR(20)', 'icon_url': 'VARCHAR(500)', 'base': 'varchar(256)'
-                    , 'temp': 'REAL', 'feels_like': 'REAL', 'temp_min': 'REAL', 'temp_max': 'REAL', 'pressure': 'INT', 'humidity': 'INT'
-                    , 'visibility': 'INT', 'wind_speed': 'REAL', 'wind_degree': 'INT', 'clouds_all': 'INT', 'datetime': 'BIGINT'
-                    , 'sys_type': 'INT', 'sys_id': 'INT', 'sys_country': 'VARCHAR(10)', 'sys_sunrise': 'BIGINT', 'sys_sunset': 'BIGINT'
-                    , 'sys_type': 'INT', 'timezone': 'INT', 'id': 'BIGINT', 'name': 'VARCHAR(256)', 'cod': 'INT', 'created_date': 'BIGINT'}
                     }
 
 services_dictionary = {
@@ -30,11 +23,6 @@ services_dictionary = {
                                     , 'Park Info': 'https://api.jcdecaux.com/parking/v1/contracts/{}/parks/{}'
                                     }
                     , 'API Key': 'fe21977da86c9f91c9368f54324b41446a413c10'}
-
-    ,'OpenWeatherAPI':{'Service Provider': 'OpenWeatherMap', 'API Reason': 'Weather Data', 'Security': 'secret'
-                        , 'Endpoint': {'weather_at_coord': 'http://api.openweathermap.org/data/2.5/weather' }
-                        , 'API Key': 'fa4a1ef5fe110a5b66dbe8f58890b6f1'}
-                        }
 
 
 # 2. Connect to a Database Engine
@@ -150,34 +138,6 @@ def existing_station_numbers(engine):
 
     return station_list
 
-
-# 6. Request WEATHER DATA
-def request_weather_data(latitude, longitude):
-    """Request OpenWeather Data.
-
-    Inpu: Key
-    Output: JsonTEXT
-    """
-    print("Inside request_weather_data()\n\n")
-
-    key = services_dictionary['OpenWeatherAPI']['API Key']
-    endpoint = services_dictionary['OpenWeatherAPI']['Endpoint']['weather_at_coord']
-
-
-
-    # Attempt the Request
-    try:
-        request_response = rq.get(endpoint, params={"APPID": key,"lat": latitude,"lon": longitude})
-        json_text = request_response.json()
-
-    # Failed for some reason
-    except Exception as e:
-        json_text = ''
-        print(e)
-
-    return json_text
-
-
 # 7. Insert values to availability and station table
 def insert_station_static_values(json_data, existing_station_numbers, engine):
     """Insert the static values into the database"""
@@ -208,7 +168,7 @@ def insert_station_static_values(json_data, existing_station_numbers, engine):
                                                     ,position_long,created_date)
                             VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) '''
 
-        variable_insert = '''INSERT INTO dynamicdata (number,available_bikes,available_bike_stands,last_update,created_date)
+        variable_insert = '''INSERT INTO availability (number,available_bikes,available_bike_stands,last_update,created_date)
                             VALUES(%s,%s,%s,%s,%s)'''
 
         # Station Data already available
@@ -229,70 +189,11 @@ def insert_station_static_values(json_data, existing_station_numbers, engine):
     return
 
 
-# 8.  Insert values to availability and station table
-def store_weather_data(weather_json, number, avail_datetime_updated, engine, time_added):
-    """Store the Weather Data into the database"""
-
-    print('Inside store_weather_data')
-    station_number = number
-    avail_dt_update = avail_datetime_updated
-    position_long = weather_json['coord']['lon']
-    position_lat = weather_json['coord']['lat']
-
-    weather_id = weather_json['weather'][0]['id']
-    main = weather_json['weather'][0]['main']
-    description = weather_json['weather'][0]['description']
-    icon = weather_json['weather'][0]['icon']
-    icon_url = 'http://openweathermap.org/img/wn/{}@2x.png'.format(icon)
-
-    base = weather_json['base']
-    temp = weather_json['main']['temp']
-    feels_like = weather_json['main']['feels_like']
-    temp_min = weather_json['main']['temp_min']
-    temp_max = weather_json['main']['temp_max']
-    pressure = weather_json['main']['pressure']
-    humidity = weather_json['main']['humidity']
-    visibility = weather_json['visibility']
-
-    wind_speed = weather_json['wind']['speed']
-    wind_degree = weather_json['wind']['deg']
-
-    clouds_all = weather_json['clouds']['all']
-
-    datetime = weather_json['dt']
-    sys_type = weather_json['sys']['type']
-    sys_country = weather_json['sys']['country']
-    sys_id = weather_json['sys']['id']
-    sys_sunrise = weather_json['sys']['sunrise']
-    sys_sunset = weather_json['sys']['sunset']
-
-    timezone = weather_json['timezone']
-    id_var = weather_json['id']
-    name = weather_json['name']
-    cod = weather_json['cod']
-
-    created_date = time_added
-
-    weather_insert = '''INSERT INTO weather(number,position_long,position_lat,weather_id,main,description,icon ,icon_url,base,temp
-                                            ,feels_like,temp_min,temp_max,pressure,humidity,visibility,wind_speed,wind_degree ,clouds_all,datetime
-                                            ,sys_type,sys_id,sys_country,sys_sunrise,sys_sunset,timezone,id,name,cod,created_date)
-
-                        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s ,%s,%s,%s)'''
-
-    weather_values = (station_number, position_long, position_lat, weather_id, main, description, icon, icon_url, base, temp, feels_like
-                      , temp_min, temp_max, pressure, humidity, visibility, wind_speed, wind_degree, clouds_all, datetime, sys_type
-                      , sys_id, sys_country, sys_sunrise, sys_sunset, timezone, id_var, name, cod, created_date)
-
-    engine.execute(weather_insert, weather_values)
-
-    return
-
-
-# 9. Pull Station Data, Post to DB
+# 8. Pull Station Data, Post to DB
 
 # Wrapper function to pull the bike data and store it into a database
 def pull_station_data():
-    """Pull Weather Data and save it into the database."""
+    """Pull station Data and save it into the database."""
 
     print("Inside pull_station_data()\n\n")
 
@@ -314,7 +215,7 @@ def pull_station_data():
     return
 
 
-# 10 Main
+# 9. Main
 def main():
     """Main Function"""
 
@@ -322,20 +223,15 @@ def main():
 
     while True:
 
-        # Pull it every minute
+        # Pull it every two minutes
         try:
-            print("-------------------------------\n\n\n")
-            print("-------------------------------\n\n\n")
             print("-------------------------------\n\n\n")
             print('''Starting: The time now is: {}'''.format(dt.datetime.now()))
             pull_station_data()
-            time.sleep(1 * 60)
-            print('\n\n\n------------------------------')
-            print('\n\n\n------------------------------')
-            print('\n\n\n------------------------------')
+            time.sleep(2 * 60)
             print('\n\n\n------------------------------')
 
-        # Error so figure out what it is.
+
         except Exception as e:
             print(e)
 
