@@ -10,14 +10,3 @@ def connection_test(host,user,password,port,db):
         test_result=False
 
     return test_result
-
-def run_tests(host,user,password,port,db):
-    """Run all test cases"""
-
-    runnable=True
-
-    #Run through each of the test case functions here. Technically this isn't really the best case to define them but should be okay.
-    while runnable:
-        runnable=connection_test(host,user,password,port,db)
-
-    return runnable
