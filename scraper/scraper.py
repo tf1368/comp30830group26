@@ -314,7 +314,7 @@ def main():
 
         # Pull it every five minutes
         try:
-            print("-------------------------------\n\n\n")
+            print("\n-------------------------------\n")
             print('''Starting: The time now is: {}'''.format(dt.datetime.now()))
 
             mysql_engine = connect_db_engine(database_info['host'],
@@ -325,10 +325,11 @@ def main():
             existing_station_list = existing_station(mysql_engine)
             bike_json = request_dbike_data()
             insert_station_static_data(bike_json, existing_station_list, mysql_engine)
-            print("Start to sleep for 5 minutes!\n")
             mysql_engine.dispose()
+
+            print("Start to sleep for 5 minutes!\n")
             time.sleep(5 * 60)
-            print('\n\n\n------------------------------')
+            print('\n------------------------------\n')
 
         except Exception as e:
             print(e)
