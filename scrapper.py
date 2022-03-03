@@ -2,7 +2,7 @@ import requests as rq
 import sqlalchemy as sqla
 import datetime as dt
 import time
-
+import pymysql
 
 # Dictionary for convenience
 database_info = {'username': 'group26',
@@ -379,8 +379,7 @@ def insert_station_static_data(bike_json, existing_station, engine):
             main = each_hour_data['weather'][0]['main']
             description = each_hour_data['weather'][0]['description']
             icon = each_hour_data['weather'][0]['icon']
-          # 不需要  icon_url = 'http://openweathermap.org/img/wn/{}@2x.png'.format(icon)
-
+          
             temp = each_hour_data['main']['temp']
             feels_like = each_hour_data['main']['feels_like']
             temp_min = each_hour_data['main']['temp_min']
@@ -395,7 +394,7 @@ def insert_station_static_data(bike_json, existing_station, engine):
             clouds_all = each_hour_data['clouds']['all']
 
 
-           # created_date = time_added 已经有了
+
 
           #  weather_insert = '''
             weatherforecast_insert = '''INSERT INTO forecast(number, position_long, position_lat, weather_id, main, description, icon, temp
@@ -425,22 +424,8 @@ def insert_station_static_data(bike_json, existing_station, engine):
                           , forecast_time_dt
                           , forecast_time_txt
                           , created_date)
-            print(weatherforecast_data)
+         #   print(weatherforecast_data)
             engine.execute(weatherforecast_insert, weatherforecast_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         engine.execute(weather_insert, weather_data)
