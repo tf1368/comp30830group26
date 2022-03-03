@@ -5,74 +5,59 @@ import pprint
 from flask_app.datadic import *
 
 
-# Connect to a Database Engine
-
+# Connect to a database engine
 def connect_db_engine(host, user, password, port, db):
-    print("Inside connect_db_engine()\n\n")
-
-    error_code = 0
+    print("connect_db_engine() in operation...\n")
     engine = ''
 
     try:
-        connect_statement = 'mysql+mysqlconnector://{}:{}@{}:{}/{}'.format(user, password, host, port, db)
-        print(connect_statement)
-        engine = sqla.create_engine(connect_statement, echo=True)
+        connection = 'mysql+mysqldb://{}:{}@{}:{}/{}'.format(user, password, host, port, db)
+        print(connection)
+        engine = sqla.create_engine(connection, echo=True)
 
     except Exception as e:
-        error_code = 999
         print(e)
 
-    return [error_code, engine]
+    print("connect_db_engine() finish!\n\n")
+    return engine
 
 
-# Set up the Database Schema and all related functions (e.g. foreign keys, primary keys)
+def setup_db(host, user, password, port, db):
+    """function to set up the database if it does not exist."""
 
-def setup_database(host, user, password, port, db):
-    """Set up the database if it does not already exist.
+    print("setup_db() in operation\n\n")
 
-    Input is the database parameters and database_dictionary
-    """
+    engine = connect_db_engine(host, user, password, port, db)
 
-    print("Inside setup_database()\n\n")
-
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
-
-    create_sql = """CREATE DATABASE IF NOT EXISTS {}""".format(db)
+    create_sql = f"""CREATE DATABASE IF NOT EXISTS {db}"""
 
     engine.execute(create_sql)
 
     # Loop through every table
     for table, columns in database_schema.items():
-        column_count = 0
-        column_number = len(columns)
-        insert_sql = ''
-        insert_sql = """CREATE TABLE IF NOT EXISTS {} (\n""".format(table)
+        insert_sql = f"""CREATE TABLE IF NOT EXIST {table}"""
         insert_row = ''
+        column_count = 0
 
-        # for every column and type add on a statement
+        # Add on a statement for every column and type
         for column_name, column_type in columns.items():
 
-            # Add the statement with , in front
             if column_count > 0:
-                insert_row += ",{}     {}".format(column_name, column_type)
-
-            # First column
+                insert_row += ",{}{}".format(column_name, column_type)
+                # First column do not need , in front
             else:
-                insert_row += "{}     {}".format(column_name, column_type)
+                insert_row += "{}{}".format(column_name, column_type)
                 column_count += 1
+                insert_sql += '{}'.format(insert_row)
 
-        insert_sql += '{})'.format(insert_row)
-
-        # Start this madness re: creating and inserting the schema
+        # Start creating and inserting the schema
         try:
             engine.execute(insert_sql)
 
-        # Except for something; probably the schema
-        except Exception as exc:
-            print(exc)
+        except Exception as e:
+            print(e)
 
-    print('Database Schema Created Successful!')
+    print('Database Schema Created, have fun!')
     engine.dispose()
 
     return
@@ -89,11 +74,9 @@ def station_table_df(host, user, password, port, db):
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
-    # no error
     try:
         df = pd.read_sql(SQL_select_station, engine)
 
@@ -109,11 +92,10 @@ def get_stations_json(host, user, password, port, db):
     """Returns the stations table as a json string
     The other functions can just call this instead of re-using the code in each function"""
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
 
     print("in get_stations_json()")
-    df = pd.read_sql_table("01_station", engine)
+    df = pd.read_sql_table("station", engine)
     station_json = df.to_json(orient="records")
     print("station data type:", type(station_json))
     pp = pprint.PrettyPrinter(indent=4)
@@ -125,11 +107,10 @@ def get_stations_json(host, user, password, port, db):
 def requestStationData(host, user, password, port, db):
     """A function to Request Station Data and Output as Json"""
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
 
     # Read sql database table into a dataframe
-    df = pd.read_sql_table("01_station", engine)
+    df = pd.read_sql_table("station", engine)
 
     print(df.iloc[1])
     # Convert to JSON string
@@ -142,17 +123,15 @@ def requestStationSQLAData(host, user, password, port, db):
     """A function to request Station Data using SQLAlchemy
     Returns Keys"""
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
 
     metadata = sqla.MetaData()
-    station_data = sqla.Table('01_station', metadata, autoload=True, autoload_with=engine)
+    station_data = sqla.Table('station', metadata, autoload=True, autoload_with=engine)
 
     print(station_data.columns.keys())
 
 
 # Get Availability
-
 
 def availability_table_df(host, user, password, port, db):
     """Retrieve the station table.
@@ -162,8 +141,7 @@ def availability_table_df(host, user, password, port, db):
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
     # no error
@@ -186,8 +164,7 @@ def availability_limit_df(host, user, password, port, db):
 
     print("IN AVAILABILITY FUNCTION")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     result = engine.execute(SQL_select_limit_availability)
 
     print("type of sql request is", type(result))
@@ -204,17 +181,16 @@ def availability_limit_df(host, user, password, port, db):
 def availability_recentUpdate(host, user, password, port, db):
     """Availability from SQL Alchemy Most recent Update limiting 109"""
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
 
     try:
         engine.connect()
 
-    except Exception as E:
-        print(E)
+    except Exception as e:
+        print(e)
 
     metadata = sqla.MetaData()
-    availability_data = sqla.Table('01_availability', metadata, autoload=True, autoload_with=engine)
+    availability_data = sqla.Table('availability', metadata, autoload=True, autoload_with=engine)
     query = sqla.select([availability_data]).order_by(sqla.desc(availability_data.columns.created_date)).limit(109)
     df = pd.read_sql_query(query, engine)
     print(df.iloc[:10])
@@ -226,8 +202,8 @@ def availability_recentUpdate(host, user, password, port, db):
     return df
 
 
-# Get Station and Availability Data
 
+# Get Station and Availability Data
 
 def station_availability_df(host, user, password, port, db):
     """Retrieve the station table.
@@ -237,8 +213,7 @@ def station_availability_df(host, user, password, port, db):
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
     # no error
@@ -257,11 +232,10 @@ def station_availability_last_update_table_df(host, user, password, port, db):
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
-    # no error
+
     try:
         df = pd.read_sql(SQL_select_station_avail_latest_update, engine)
 
@@ -273,6 +247,7 @@ def station_availability_last_update_table_df(host, user, password, port, db):
     return df
 
 
+
 # Get Station and Availability And Weather Data
 
 def station_availability_weather_table_df(host, user, password, port, db):
@@ -282,18 +257,8 @@ def station_availability_weather_table_df(host, user, password, port, db):
 
     print("Inside pull_station_weather_availability_data(host,user,password,port,scraper)")
 
-    # Possible Errors
-    error_dictionary = {0: 'No Error'
-        , 1: 'The database failed to connect'
-        , 2: "The query is not a valid string"
-        , 3: "The returned database is empty"
-        , 999: 'Uncaught exception'
-                        }
-
     # Set up a default value to return
     data_df = pd.DataFrame()
-
-    error_code = 0
 
     # Configure the SQL statement
     sql_statement = SQL_select_station_avail_weather
@@ -302,41 +267,21 @@ def station_availability_weather_table_df(host, user, password, port, db):
 
     # Begin try
     try:
-        engine_l = connect_db_engine(host, user, password, port, db)
-        engine = engine_l[1]
+        engine = connect_db_engine(host, user, password, port, db)
 
-        # No error connecting to engine
-        if engine_l[0] == 0:
+        if type(sql_statement) == str and len(sql_statement) > 0:
 
-            # String
-            if type(sql_statement) == str and len(sql_statement) > 0:
+            # Begin counter
+            start_time = time.perf_counter_ns()
+            data_df = pd.read_sql(sql_statement, engine)
+            end_time = time.perf_counter_ns()
+            engine.dispose()
 
-                # Begin counter
-                start_time = time.perf_counter_ns()
-                data_df = pd.read_sql(sql_statement, engine)
-                end_time = time.perf_counter_ns()
-                engine.dispose()
-
-                # Performance measurement
-                print(time_statement.format(end_time - start_time))
-
-                # Dataframe is empty
-                if len(data_df) == 0:
-                    error_code = 3
-                    error_message = error_dictionary[error_code]
-
-            # Invalid SQL Statement
-            else:
-                error_code = 2
-                error_message = error_dictionary[error_code]
-
-        else:
-            error_code = 1
-            error_message = error_dictionary[error_code]
+            # Performance measurement
+            print(time_statement.format(end_time - start_time))
 
     except Exception as e:
-        error_code = 999
-        print("Unexpected failure: {}".format(e))
+        print(e)
 
     return data_df
 
@@ -349,11 +294,8 @@ def station_availability_weather_table_latest_df(host, user, password, port, db)
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
-    df = pd.DataFrame()
+    engine = connect_db_engine(host, user, password, port, db)
 
-    # no error
     df = pd.read_sql(
         SQL_select_avail_weather_conditional.format(SQL_select_availability_last_update, SQL_select_weather), engine)
 
@@ -370,11 +312,9 @@ def availability_table_for_station_df(host, user, password, port, db, station_no
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
-    # no error
     try:
         df = pd.read_sql(SQL_select_availability_where_number.format(station_no), engine)
 
@@ -388,16 +328,15 @@ def availability_table_for_station_df(host, user, password, port, db, station_no
 
 def weather_last_update_df(host, user, password, port, db):
     """Retrieve weather last update.
+
     Return table as dataframe
     """
 
     print("Inside setup_database()\n\n")
 
-    engine_l = connect_db_engine(host, user, password, port, db)
-    engine = engine_l[1]
+    engine = connect_db_engine(host, user, password, port, db)
     df = pd.DataFrame()
 
-    # no error
     try:
         df = pd.read_sql(SQL_select_weather_last_update, engine)
 
@@ -407,4 +346,3 @@ def weather_last_update_df(host, user, password, port, db):
     engine.dispose()
 
     return df
-
