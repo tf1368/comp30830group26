@@ -29,6 +29,20 @@ def stations():
 
     return station_json
 
+@app.route('/hourly/<int:station_number>')
+def hourly(station_number):
+    """Returns the hourly Json Data"""
+
+    hourly_json = get_hourly_data(host=database_info['host'],
+                                  user=database_info['username'],
+                                  password=database_info['password'],
+                                  port=database_info['port'],
+                                  db=database_info['database'],
+                                  station_number=station_number)
+
+    return hourly_json
+
+
 
 # Run
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ def get_stationinfo(host, user, password, port, db):
 
         sql_statement = "SELECT s.number, s.name, s.address, s.position_lat, " \
                         "s.position_long, a.available_bike_stands, a.available_bikes, " \
-                        "MAX(a.last_update) AS 'current_availability' " \
+                        "MAX(from_unixtime(a.last_update)) AS 'last_update_time', a.created_date AS 'created_date' " \
                         "FROM availability as a " \
                         "INNER JOIN station as s " \
                         "ON s.number = a.number " \
@@ -36,13 +36,42 @@ def get_stationinfo(host, user, password, port, db):
                         "ORDER BY s.number;"
 
         df = pd.read_sql(sql_statement, engine)
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
 
     except Exception as e:
         print(e)
 
-
-    # Turn the data into the json
-    data_json = df.to_json(orient="records")
-
     print("get_stationinfo() finish!\n\n")
     return data_json
+
+
+def get_hourly_data(host, user, password, port, db, station_number):
+    try:
+        # Connect to the RDS database
+        engine = connect_db_engine(host, user, password, port, db)
+
+        print("get_hourly_data() in operation...\n")
+
+        sql_statement = "SELECT s.name, count(a.number)," \
+                        "avg(a.available_bike_stands) as Avg_bike_stands," \
+                        "avg(a.available_bikes) as Avg_bikes_avail," \
+                        "EXTRACT(HOUR FROM from_unixtime(a.last_update)) as Hourly " \
+                        "FROM availability as a " \
+                        "JOIN station as s " \
+                        "ON s.number = a.number " \
+                        "WHERE a.number = ${station_number}" \
+                        "GROUP BY EXTRACT(HOUR FROM from_unixtime(a.last_update)) " \
+                        "ORDER BY EXTRACT(HOUR FROM from_unixtime(a.last_update)) "
+
+        df = pd.read_sql(sql_statement, engine)
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
+
+    except Exception as e:
+        print(e)
+
+    print("get_hourly_data() finish!\n\n")
+
+    return data_json
+
