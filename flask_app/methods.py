@@ -34,7 +34,6 @@ def get_stationinfo(host, user, password, port, db):
                         "ON s.number = a.number " \
                         "GROUP BY s.number " \
                         "ORDER BY s.number;"
-
         df = pd.read_sql(sql_statement, engine)
         # Turn the data into the json
         data_json = df.to_json(orient="records")
@@ -72,6 +71,32 @@ def get_hourly_data(host, user, password, port, db, station_number):
         print(e)
 
     print("get_hourly_data() finish!\n\n")
+
+    return data_json
+
+
+def get_current_weather(host, user, password, port, db):
+    try:
+        # Connect to the RDS database
+        engine = connect_db_engine(host, user, password, port, db)
+
+        print("get_current_weather() in operation...\n")
+
+        sql_statement = "SELECT w.number,w.position_long,w.position_lat," \
+                        "w.main,w.description,w.icon,w.temp,w.feels_like," \
+                        "FROM_UNIXTIME(w.created_date) " \
+                        "FROM (SELECT w.number,MAX(w.created_date) as created_date FROM weather as w GROUP BY w.number) as max_weath " \
+                        "INNER JOIN weather as w " \
+                        "ON max_weath.created_date = w.created_date AND max_weath.number = w.number"
+
+        df = pd.read_sql(sql_statement, engine)
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
+
+    except Exception as e:
+        print(e)
+
+    print("get_current_weather() finish!\n\n")
 
     return data_json
 

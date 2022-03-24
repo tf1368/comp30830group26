@@ -8,19 +8,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
   <link href="{{ url_for('static', filename='map.css') }}" rel="stylesheet" type="text/css">
 </head>
-<body>
-  
+<body onload="currentWeather()">
+  <header>
+    <div class="wrapper">
+        <nav>
+            <a class="HeaderLink" href="/index">Stations</a>
+
+            <div id="MarkerFilter">
+                <h3>Filter markers by availablity of bikes:</h3>
+                <label for="allMarkers">
+                    <input type="radio" name="colorFilter"
+                           value="all"
+                           onchange="filterMarkers(this.value)" checked>All stations</label>
+                <label for="redMarkers">
+                    <input type="radio" name="colorFilter"
+                           value="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                           onchange="filterMarkers(this.value)">0</label>
+                <label for="orangeMarkers">
+                    <input type="radio" name="colorFilter"
+                           value="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+                           onchange="filterMarkers(this.value)">0%-25%</label>
+                <label for="purpleMarkers">
+                    <input type="radio" name="colorFilter"
+                           value="http://maps.google.com/mapfiles/ms/icons/purple-dot.png"
+                           onchange="filterMarkers(this.value)">25%-50%</label>
+                <label for="blueMarkers">
+                    <input type="radio" name="colourFilter"
+                           value="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                           onchange="filterMarkers(this.value)">50%-75%</label>
+                <label for="greenMarkers">
+                    <input type="radio" name="colourFilter"
+                           value="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                           onchange="filterMarkers(this.value)">75%-100%</label>
+            </div>
+        </nav>
+    </div>
+</header>
   <h1>Lets'a go to Super Dublin World!!!</h1>
 
   <div id="map"></div>
 
-  <script type="text/javascript" src="{{ url_for('static', filename='js.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js.js') }}"></script>
 
-  <!-- Replace API_KEY and MAP_ID with your own ones -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU&map_ids=c977067f443727f6&callback=initMap">
+    <!-- Replace API_KEY and MAP_ID with your own ones -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU&map_ids=c977067f443727f6&callback=initMap">
 
     //api key: AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU
     //c977067f443727f6
-</script>
+    </script>
+
+    <div id="displayWeatherType"></div>
+
 </body>
 </html>
