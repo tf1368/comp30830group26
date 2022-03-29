@@ -1,6 +1,7 @@
 var currWindow = false;
 let markers = [];
 
+
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -60,6 +61,7 @@ function initMap() {
                 currWindow = station_info_window;
                 station_info_window.open(map, marker);
                 hourlyChart(station.number);
+                dailyChart(station.number);
                 });
             });
         }).catch(err => {
@@ -136,12 +138,12 @@ function hourlyChart(station_number) {
         }).then(data => {
 
         // Load the chart object from the api
-        let chart_data = new google.visualization.DataTable();
+        chart_data = new google.visualization.DataTable();
 
         // Info for the graph such as title
         options = {
             title: 'Average Availability Per Hour',
-            width: '700', height: '450',
+            width: '700', height: '400',
             hAxis: {title: 'Hour of the Day (00:00)',},
             vAxis: {title: 'Number of Available Bikes'}
         };
@@ -154,6 +156,60 @@ function hourlyChart(station_number) {
             chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['Avg_bikes_avail']]);
         }
         chart = new google.visualization.LineChart(document.getElementById('hour_chart'));
+        chart.draw(chart_data, options);
+    });
+}
+
+
+// Function to graph the average availability by day in week for a clicked station
+function dailyChart(station_number) {
+    fetch("/daily/"+station_number).then(response => {
+            return response.json();
+        }).then(data => {
+
+        var chosen_station;
+        var analysis_title_output = "";
+
+        bike_stands = 0;
+        bikes_free = 0;
+        count = 0;
+        day_name = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        day_name_abbreviation = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
+        average = [];
+        for (i = 0; i < day_name.length; i++) {
+            data.forEach(obj => {
+                chosen_station = obj.name;
+
+                if (obj.DayName == day_name[i]) {
+                    bike_stands = obj.Avg_bike_stands;
+                    bikes_free = bikes_free + obj.Avg_bikes_free;
+                    count = count + 1;
+                }
+            })
+            average.push(bikes_free/count);
+            bikes_free = 0;
+            count = 0;
+        }
+
+         chart_data = new google.visualization.DataTable();
+         options = {
+             title: 'Average Availability Per Day',
+             width: '700', height: '400',
+             vAxis: {
+                title: 'Number of Bikes'
+             }
+        };
+        chart_data.addColumn('string', "Week_Day_No");
+        chart_data.addColumn('number', "Average Bikes Available");
+
+        for (i = 0; i < day_name.length; i++) {
+            chart_data.addRow([day_name_abbreviation[i], average[i]]);
+        }
+
+        analysis_title_output = "<h2>" + chosen_station + "</h2>";
+        document.getElementById("analysis_title").innerHTML = analysis_title_output;
+
+        chart = new google.visualization.ColumnChart(document.getElementById("daily_chart"));
         chart.draw(chart_data, options);
     });
 }

@@ -88,11 +88,11 @@ def hourly(station_number):
                         "FROM availability as a " \
                         "JOIN station as s " \
                         "ON s.number = a.number " \
-                        "WHERE a.number = %s" \
-                        "GROUP BY s.number " \
-                        "ORDER BY EXTRACT(HOUR FROM from_unixtime(a.last_update))"(station_number)
+                        "WHERE a.number = %(station_id)s " \
+                        "GROUP BY EXTRACT(HOUR FROM from_unixtime(a.last_update)) " \
+                        "ORDER BY EXTRACT(HOUR FROM from_unixtime(a.last_update)) asc"
 
-        df = pd.read_sql(sql_statement, engine)
+        df = pd.read_sql(sql_statement, engine, params = {'station_id':station_number})
         # Turn the data into the json
         data_json = df.to_json(orient="records")
 
@@ -100,6 +100,42 @@ def hourly(station_number):
         print(e)
 
     print("hourly() finish!\n\n")
+
+    return data_json
+
+
+@app.route('/daily/<int:station_number>')
+def daily(station_number):
+    """Returns the hourly Json Data"""
+
+    print("daily() in operation...\n")
+
+    try:
+        # Connect to the RDS database
+        engine = connect_db_engine(host=database_info['host'],
+                                   user=database_info['username'],
+                                   password=database_info['password'],
+                                   port=database_info['port'],
+                                   db=database_info['database'])
+
+        sql_statement = "SELECT s.name, avg(a.available_bike_stands) as Avg_bike_stands, " \
+                        "avg(a.available_bikes) as Avg_bikes_free, " \
+                        "DAYNAME(from_unixtime(a.last_update)) as DayName " \
+                        "FROM availability as a " \
+                        "JOIN station as s " \
+                        "ON s.number = a.number " \
+                        "WHERE s.number = %(station_id)s " \
+                        "GROUP BY s.name , DayName " \
+                        "ORDER BY s.name , DayName;"
+
+        df = pd.read_sql(sql_statement, engine, params = {'station_id':station_number})
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
+
+    except Exception as e:
+        print(e)
+
+    print("daily() finish!\n\n")
 
     return data_json
 

@@ -56,6 +56,16 @@
     //api key: AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU
     //c977067f443727f6
     </script>
+     <!--Load the google charts library-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>google.load('visualization', '1', {packages: ['corechart', 'bar', 'line']});</script>
+     <!--Load the AJAX API-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <!--Line charts-->
+    <div id="analysis_title"></div>
+    <div id="chart_area">
+            <div id="daily_chart" class="charts"></div>
+            <div id="hour_chart" class="charts"></div>
 
     <div id="displayWeatherType"></div>
 
