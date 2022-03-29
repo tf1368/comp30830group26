@@ -59,7 +59,7 @@ function initMap() {
 
                 currWindow = station_info_window;
                 station_info_window.open(map, marker);
-
+                hourlyChart(station.number);
                 });
             });
         }).catch(err => {
@@ -136,7 +136,8 @@ function hourlyChart(station_number) {
         }).then(data => {
 
         // Load the chart object from the api
-        chart_data = new google.visualization.DataTable();
+        let chart_data = new google.visualization.DataTable();
+
         // Info for the graph such as title
         options = {
             title: 'Average Availability Per Hour',
@@ -144,10 +145,11 @@ function hourlyChart(station_number) {
             hAxis: {title: 'Hour of the Day (00:00)',},
             vAxis: {title: 'Number of Available Bikes'}
         };
+
         // Make columns for the chart and specify their type and title
         chart_data.addColumn('timeofday', "Time of Day");
         chart_data.addColumn('number', "Average Available Bikes ");
-
+        // Add data.
         for (i = 0; i < data.length; i++) {
             chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['Avg_bikes_avail']]);
         }
