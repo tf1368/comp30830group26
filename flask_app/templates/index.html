@@ -12,7 +12,8 @@
   <header>
     <div class="wrapper">
         <nav>
-            <a class="HeaderLink" href="/index">Stations</a>
+            <a class="HeaderLink" href="/index.html">Stations</a>
+            <a class="HeaderLink" href="/about.html">About</a>
 
             <div id="MarkerFilter">
                 <h3>Filter markers by availablity of bikes:</h3>
@@ -45,8 +46,11 @@
     </div>
 </header>
   <h1>Lets'a go to Super Dublin World!!!</h1>
+  <div id="displayWeatherType"></div>
 
   <div id="map"></div>
+  <div id="directionsPanel"></div>
+
 
     <script type="text/javascript" src="{{ url_for('static', filename='js.js') }}"></script>
 
@@ -66,8 +70,10 @@
     <div id="chart_area">
             <div id="daily_chart" class="charts"></div>
             <div id="hour_chart" class="charts"></div>
+            <div id="forecast_chart" class="charts"></div>
 
-    <div id="displayWeatherType"></div>
+
+
 
 </body>
 </html>

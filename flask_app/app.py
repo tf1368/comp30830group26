@@ -172,41 +172,36 @@ def current_weather():
 
     return data_json
 
-# @app.route('/forecast_weather')
-# def forecast_weather():
-#     """Returns the current weather Json Data of Dublin"""
-#
-#     print("forecast_weatherr() in operation...\n")
-#
-#     try:
-#         # Connect to the RDS database
-#         engine = connect_db_engine(host=database_info['host'],
-#                                    user=database_info['username'],
-#                                    password=database_info['password'],
-#                                    port=database_info['port'],
-#                                    db=database_info['database'], )
-#
-#         sql_statement = "SELECT number,position_long,position_lat," \
-#                         "main,description,icon,temp,feels_like,wind_speed," \
-#                         "FROM forecast WHERE number = 42 GROUP BY number" \
-#                         "SELECT w.number,w.position_long,w.position_lat," \
-#                         "w.main,w.description,w.icon,w.temp,w.feels_like," \
-#                         "FROM_UNIXTIME(w.created_date) " \
-#                         "FROM (SELECT w.number,MAX(w.created_date) as created_date FROM weather as w GROUP BY w.number) as max_weath " \
-#                         "INNER JOIN weather as w " \
-#                         "ON max_weath.created_date = w.created_date AND max_weath.number = w.number"
-#
-#
-#         df = pd.read_sql(sql_statement, engine)
-#         # Turn the data into the json
-#         data_json = df.to_json(orient="records")
-#
-#     except Exception as e:
-#         print(e)
-#
-#     print("forecast_weather() finish!\n\n")
-#
-#     return data_json
+@app.route('/forecast_weather/<int:station_number>')
+def forecast_weather(station_number):
+    """Returns the current weather Json Data of Dublin"""
+
+    print("forecast_weather() in operation...\n")
+
+    try:
+        # Connect to the RDS database
+        engine = connect_db_engine(host=database_info['host'],
+                                   user=database_info['username'],
+                                   password=database_info['password'],
+                                   port=database_info['port'],
+                                   db=database_info['database'], )
+
+        sql_statement = "SELECT temp as temp FROM forecast  " \
+                        "EXTRACT(HOUR FROM from_unixtime(forecast_time_dt)) as Hourly " \
+                        "GROUP BY EXTRACT(HOUR FROM from_unixtime(forecast_time_dt)) " \
+                        "ORDER BY EXTRACT(HOUR FROM from_unixtime(forecast_time_dt)) asc"
+
+
+        df = pd.read_sql(sql_statement, engine, params={'station_id': station_number})
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
+
+    except Exception as e:
+        print(e)
+
+    print("forecast_weather() finish!\n\n")
+
+    return data_json
 
 # Run
 if __name__ == "__main__":

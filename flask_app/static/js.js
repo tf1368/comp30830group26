@@ -38,11 +38,12 @@ function initMap() {
                 const marker = new google.maps.Marker({
                     position: {lat: station.position_lat, lng: station.position_long},
                     title: station.name,
-                    number: station.number,
+
                     available_bikes: station.available_bikes,
                     available_stands: station.available_bike_stands,
                     icon: marker_color(station.available_bikes, station.available_bike_stands),
-                    map: map
+                    map: map,
+                    animation: google.maps.Animation.DROP
                     // infowindow: station_info_window,
                 });
                 markers.push(marker);
@@ -126,8 +127,39 @@ function currentWeather() {
         }).then(
             data => {
                 console.log("currentWeather: ", data[0]["main"])
-                document.getElementById("displayWeatherType").textContent = "Weather in Dublin: " + data[0]["main"];
+                document.getElementById("displayWeatherType").textContent =
+                    "Weather: " + data[0]["description"]+
+                    " Temperature: " + parseInt(data[0]["temp"] -  273.15 ) + "°C"+
+                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C";
             })
+}
+// Function to graph the average availability by hour for a clicked station
+function forecast_weather(station_number) {
+    fetch("/forecast_weather/"+station_number).then(response => {
+            return response.json();
+        }).then(data => {
+
+        // Load the chart object from the api
+        chart_data = new google.visualization.DataTable();
+
+        // Info for the graph such as title
+        options = {
+            title: 'Forecast Temperature Per Hour',
+            width: '700', height: '400',
+            hAxis: {title: 'Hour of the Day (00:00)',},
+            vAxis: {title: 'celcius',},
+        };
+
+        // Make columns for the chart and specify their type and title
+        chart_data.addColumn('timeofday', "Time of Day");
+        chart_data.addColumn('Temperature', "temp");
+        // Add data.
+        for (i = 0; i < data.length; i++) {
+            chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['temp']]);
+        }
+        chart = new google.visualization.LineChart(document.getElementById('forecast_chart'));
+        chart.draw(chart_data, options);
+    });
 }
 
 
