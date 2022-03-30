@@ -52,7 +52,7 @@ function initMap() {
                     currWindow.close();
                 }
                 const station_info_window = new google.maps.InfoWindow({
-                content: "<h3>"+ station.number + station.name + "</h3>"
+                content: "<h3>" + station.name + "</h3>"
                 + "<p><b>Available Bikes: </b>" + station.available_bikes + "</p>"
                 + "<p><b>Available Stands: </b>" + station.available_bike_stands + "</p>"
                 + "<p><b>Last Updated: </b>" + last_update_time + "</p>"
@@ -125,43 +125,11 @@ function currentWeather() {
             return response.json();
         }).then(
             data => {
-                console.log("currentWeather: ", data[0])
-                document.getElementById("displayWeatherType").textContent =
-                    "Current Weather: "  + data[0]["description"] +
-                    "  Temperature: " + parseInt(data[0]["temp"] - 273.16)+ "℃"
-                +"  Feels like: " + parseInt(data[0]["feels_like"] - 273.16)+ "℃"
-                +" \nWind speed: " + parseInt(data[0]["wind_speed"])+ " m/s";
+                console.log("currentWeather: ", data[0]["main"])
+                document.getElementById("displayWeatherType").textContent = "Weather in Dublin: " + data[0]["main"];
             })
 }
 
-// // Function to graph the forecast weather
-// function hourlyforecastChart() {
-//     fetch("/forecast_weather/").then(response => {
-//             return response.json();
-//         }).then(data => {
-//
-//         // Load the chart object from the api
-//         chart_data = new google.visualization.DataTable();
-//
-//         // Info for the graph such as title
-//         options = {
-//             title: 'Average Availability Per Hour',
-//             width: '700', height: '400',
-//             hAxis: {title: 'Hour of the Day (00:00)',},
-//             vAxis: {title: 'Number of Available Bikes'}
-//         };
-//
-//         // Make columns for the chart and specify their type and title
-//         chart_data.addColumn('timeofday', "Time of Day");
-//         chart_data.addColumn('number', "Average Available Bikes ");
-//         // Add data.
-//         for (i = 0; i < data.length; i++) {
-//             chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['Avg_bikes_avail']]);
-//         }
-//         chart = new google.visualization.LineChart(document.getElementById('hourlyforecastChart'));
-//         chart.draw(chart_data, options);
-//     });
-// }
 
 // Function to graph the average availability by hour for a clicked station
 function hourlyChart(station_number) {
