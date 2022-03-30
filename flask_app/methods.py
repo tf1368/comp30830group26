@@ -17,7 +17,6 @@ def connect_db_engine(host, user, password, port, db):
     print("connect_db_engine() finish!\n\n")
     return engine
 
-
 def get_stationinfo(host, user, password, port, db):
 
     try:
