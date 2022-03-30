@@ -42,7 +42,8 @@ function initMap() {
                     available_bikes: station.available_bikes,
                     available_stands: station.available_bike_stands,
                     icon: marker_color(station.available_bikes, station.available_bike_stands),
-                    map: map
+                    map: map,
+                    animation: google.maps.Animation.DROP
                     // infowindow: station_info_window,
                 });
                 markers.push(marker);
@@ -126,7 +127,10 @@ function currentWeather() {
         }).then(
             data => {
                 console.log("currentWeather: ", data[0]["main"])
-                document.getElementById("displayWeatherType").textContent = "Weather in Dublin: " + data[0]["main"];
+                document.getElementById("displayWeatherType").textContent = 
+                    "Weather: " + data[0]["description"],
+                    " Temperature: " + parseInt(data[0]["temp"] - 237.28) + "°C",
+                    " feels like: " + parseInt(data[0]["feels_like"] - 237.28) + "°C";
             })
 }
 
