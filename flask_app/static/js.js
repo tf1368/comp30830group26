@@ -130,7 +130,10 @@ function currentWeather() {
                 document.getElementById("displayWeatherType").textContent =
                     "Weather: " + data[0]["description"]+
                     " Temperature: " + parseInt(data[0]["temp"] -  273.15 ) + "°C"+
-                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C";
+                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C"
+                    // +
+                    // " Humidity: " + data[0]["humidity"] + "%"+
+                    // " Wind speed: " + data[0]["wind_speed"] + "m/s";
             })
 }
 // Function to graph the average availability by hour for a clicked station
