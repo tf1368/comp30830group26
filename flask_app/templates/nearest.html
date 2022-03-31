@@ -29,6 +29,37 @@
         margin: 0;
         padding: 0;
       }
+      header {
+        position: relative;
+        max-width: 100vw;
+        top:0;
+        height: 4vw;
+        font-weight: bold;
+        color: #F9F9F6;
+        background-color: #444;
+        z-index: 1;
+        padding: 1% 1% 1% 1%;
+    }
+
+    div {
+        padding: 5px;
+    }
+
+    header a {
+        font-family: 'Press Start 2P', cursive;
+        float: left;
+        color: #ffffff;
+        text-align: center;
+        padding: 1% 2% 1% 2%;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      /* Change the color of links on hover */
+      navbarheader:hover {
+        color: #898989;
+      }
 
       #map-container {
         width: 100%;
@@ -127,7 +158,7 @@
         width: 100%;
         height: 100%;
         border-radius: 0.2em;
-        color: black;
+        color: white;
         background: transparent;
       }
 
@@ -951,6 +982,18 @@
     </script>
   </head>
   <body>
+      <header id="header">
+
+
+      <!--BEGIN: Links Area-->
+
+          <nav id="navbarheader">
+            <a class="HeaderLink" href="/comp30830group26/flask_app/templates/index.html">stations</a>
+            <a class="HeaderLink" href="/comp30830group26/flask_app/templates/about.html">About</a>
+            <a class="HeaderLink" href="/comp30830group26/flask_app/templates/nearest.html">Nearest</a>
+          </nav>
+      </header>
+
     <div id="map-container">
       <div id="locations-panel">
         <div id="locations-panel-list">
@@ -979,6 +1022,6 @@
       </div>
       <div id="map"></div>
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v4_cABCDE" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU&map_ids=c977067f443727f6&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v4_cABCDE" async defer></script>
   </body>
 </html>
