@@ -172,6 +172,41 @@ def current_weather():
 
     return data_json
 
+@app.route("/weather_forecast")
+def weather_forecast():
+    """Returns the weather forecast Json Data of Dublin"""
+
+    print("weather_forecast() in operation...\n")
+
+    try:
+        # Connect to the RDS database
+        engine = connect_db_engine(host=database_info['host'],
+                                   user=database_info['username'],
+                                   password=database_info['password'],
+                                   port=database_info['port'],
+                                   db=database_info['database'], )
+
+        sql_statement = "SELECT f.number,f.main," \
+                        "avg(f.feels_like) as Avg_temp," \
+                        "avg(f.wind_speed) as Avg_wind_speed," \
+                        "date(from_unixtime(f.forecast_time_dt)) as Daily " \
+                        "FROM forecast as f " \
+                        "WHERE f.number = 2 " \
+                        "GROUP BY date(from_unixtime(f.forecast_time_dt)) " \
+                        "ORDER BY date(from_unixtime(f.forecast_time_dt)) desc"
+
+
+        df = pd.read_sql(sql_statement, engine)
+        # Turn the data into the json
+        data_json = df.to_json(orient="records")
+
+    except Exception as e:
+        print(e)
+
+    print("forecast_weather() finish!\n\n")
+
+    return data_json
+
 
 # Run
 if __name__ == "__main__":

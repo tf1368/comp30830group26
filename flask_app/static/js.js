@@ -38,11 +38,12 @@ function initMap() {
                 const marker = new google.maps.Marker({
                     position: {lat: station.position_lat, lng: station.position_long},
                     title: station.name,
-                    number: station.number,
+
                     available_bikes: station.available_bikes,
                     available_stands: station.available_bike_stands,
                     icon: marker_color(station.available_bikes, station.available_bike_stands),
-                    map: map
+                    map: map,
+                    animation: google.maps.Animation.DROP
                     // infowindow: station_info_window,
                 });
                 markers.push(marker);
@@ -62,6 +63,7 @@ function initMap() {
                 station_info_window.open(map, marker);
                 hourlyChart(station.number);
                 dailyChart(station.number);
+                forecast_weather();
                 });
             });
         }).catch(err => {
@@ -126,8 +128,44 @@ function currentWeather() {
         }).then(
             data => {
                 console.log("currentWeather: ", data[0]["main"])
-                document.getElementById("displayWeatherType").textContent = "Weather in Dublin: " + data[0]["main"];
+                document.getElementById("displayWeatherType").textContent =
+                    "Weather: " + data[0]["description"]+
+                    " Temperature: " + parseInt(data[0]["temp"] -  273.15 ) + "°C"+
+                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C";
             })
+}
+
+// Function to graph the average availability by hour for a clicked station
+function forecast_weather() {
+    fetch("/weather_forecast").then(response => {
+            return response.json();
+        }).then(data => {
+
+        // Load the chart object from the api
+        table_data = new google.visualization.DataTable();
+
+        options = {
+               showRowNumber: false,
+               allowHtml: true,
+               width: '50%',
+               height: '100%',
+            };
+
+        // Make columns for the chart and specify their type and title
+        table_data.addColumn('string',"Date");
+        table_data.addColumn('string', "Weather");
+        table_data.addColumn('number', "Average temperature(°C)");
+        table_data.addColumn('number', "Average wind speed");
+        // Add data.
+        for (i = 3; i >= 0; i--) {
+            var date = new Date(data[i]['Daily']).toLocaleDateString('en-ie');
+            table_data.addRows([
+               [date, data[i]['main'], data[i]['Avg_temp'] - 273.15, data[i]['Avg_wind_speed']]
+            ]);
+        }
+        table = new google.visualization.Table(document.getElementById('forecast_table'));
+        table.draw(table_data, options);
+    });
 }
 
 
