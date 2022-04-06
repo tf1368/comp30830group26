@@ -128,7 +128,7 @@ function currentWeather() {
             data => {
                 console.log("currentWeather: ", data[0]["main"])
                 document.getElementById("displayWeatherType").textContent =
-                    "Weather: " + data[0]["description"]+
+                    "       Weather: " + data[0]["description"]+
                     " Temperature: " + parseInt(data[0]["temp"] -  273.15 ) + "°C"+
                     " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C"
                     // +
