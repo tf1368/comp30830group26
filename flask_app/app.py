@@ -2,6 +2,10 @@ import pandas as pd
 import sqlalchemy as sqla
 from flask import Flask, render_template
 from flask_app.datadic_sql import *
+import json
+from joblib import dump, load
+
+
 
 # Define app
 app = Flask(__name__)
@@ -66,7 +70,6 @@ def stations():
     return data_json
 
 
-# noinspection PyCallingNonCallable
 @app.route('/hourly/<int:station_number>')
 def hourly(station_number):
     """Returns the hourly Json Data"""
@@ -206,6 +209,17 @@ def weather_forecast():
     print("forecast_weather() finish!\n\n")
 
     return data_json
+
+@app.route('/prediction/<int:station_id>')
+def predict(station_number):
+    model = load('availabilitypredictions.joblib')
+    availability_prediction = model.predict([[station_number]])
+
+    prediction_list = availability_prediction.tolist()
+    prediction_dict = {"bikes": prediction_list[0]}
+    result = json.dumps(prediction_dict)
+
+    return result
 
 
 # Run
