@@ -32,6 +32,19 @@ def home():
 
     return render_template('index.html')
 
+@app.route("/about")
+def about():
+    """Return the about Route"""
+
+    return render_template('about.html')
+
+@app.route("/nearest")
+def near():
+    """Return the near Route"""
+
+    return render_template('nearest.html')
+
+
 
 @app.route("/stations")
 def stations():
