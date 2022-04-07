@@ -93,7 +93,6 @@ header a {
         margin-left: 50%;
         transform: translateX(-50%);
         width: 95%;
-        background-image: url('../static/ajax-loader1.gif');
         background-repeat:no-repeat;
         background-position: center center;
     }

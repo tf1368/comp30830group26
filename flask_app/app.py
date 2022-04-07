@@ -1,7 +1,7 @@
 import pandas as pd
 import sqlalchemy as sqla
 from flask import Flask, render_template
-from flask_app.datadic_sql import *
+from datadic_sql import *
 
 # Define app
 app = Flask(__name__)
