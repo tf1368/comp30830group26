@@ -1,5 +1,6 @@
 var currWindow = false;
 let markers = [];
+var date;
 
 
 function initMap() {
@@ -258,28 +259,47 @@ function prediction(station_number) {
         return response.json();
     }).then(data => {
     console.log(data)
+    console.log("availabilityPrediction: ", data.Day1)
+    document.getElementById("displayPrediction").textContent =
+                    "[Average Available Bikes] " + "1 Day after: "+ data.Day1 + "; "+ "2 Day after: " + data.Day2 + "; " + "3 Day after: " + data.Day3 + "; " + "4 Day after: " +  data.Day4 + "; "
     })
 }
 
 // Function to populate the select dropdown menu for prediction
-function predictionDropDown() {
+function predictionStationDropDown() {
     fetch("/stations").then(response => {
         return response.json();
     }).then(data => {
 
-    var station_output = "<form><label for='station_option'>Choose a station: </label>"
-    + "<select name='station_option' id='station_option' onchange='setPredictionValue(this)'>"
-    + "<option value='' disabled selected> -------------**************------------- </option><br>";
+        var station_output = "<form><label for='station_option'>Choose a station: </label>"
+            + "<select name='station_option' id='station_option' onchange='setPredictionValue(this)'>"
+            + "<option value='' disabled selected> ------------------------------------------- </option><br>";
 
-    data.forEach(station => {
-        station_output += "<option value=" + station.number + ">" + station.name + "</option><br>";
-    })
-
-    station_output += "</select></form>";
-    station_output += "<form><label for='future_date'>Future Date:</label>"
-    + "<input type='date' id='future_date' name='future_date'><input type='submit'></form>";
-    document.getElementById("prediction_area").innerHTML = station_output;
+        data.forEach(station => {
+            station_output += "<option value=" + station.number + ">" + station.name + "</option><br>";
+        })
+        station_output += "</select></form>";
+        document.getElementById("prediction_station").innerHTML = station_output;
     }).catch(err => {
+        console.log("Error:", err);
+    })
+}
+
+// Function to populate the select dropdown menu for prediction
+function predictionDateDropDown() {
+    fetch("/weather_forecast").then(response => {
+            return response.json();
+        }).then(data => {
+
+            var date_output = "<form><label for='future_date'>Future Date:</label>"
+            + "<select name='date_option' id='date_option' >"
+            + "<option value='' disabled selected> ------------------------------------------- </option><br>";
+            for (i = 3; i >= 0; i--) {
+                var date = new Date(data[i]['Daily']).toLocaleDateString('en-ie');
+                date_output += "<option value=" + date + ">" + date + "</option><br>";}
+            date_output += "</select></form>";
+            document.getElementById("prediction_date").innerHTML = date_output;
+        }).catch(err => {
         console.log("Error:", err);
     })
 }
@@ -287,5 +307,5 @@ function predictionDropDown() {
 // Function to set user choice station and trigger prediction function
 function setPredictionValue(control) {
     var choice = control.value;
-    //prediction(choice);
+    prediction(choice);
 }

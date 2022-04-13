@@ -1,0 +1,229 @@
+<!doctype html>
+
+<html lang="en">
+
+<!-- BEGIN: Head Area: -->
+<head>
+
+    <!--SEO-->
+    <meta http-equiv="about" content="text/html; charset=utf-8">
+    <meta name="About" content="More Info of Dublin Bikes">
+    <meta name="keywords" content="Dublin Bikes, Availability, Google Map API, More Info, Author">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!--Title-->
+    <title>Dublin Bike About Page</title>
+
+
+    <!--CSS-->
+    <link rel="style" type="text/css" href="{{ url_for('static', filename='map.css') }}">
+    <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='style' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='style' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <style>
+
+        html {
+    box-sizing: border-box;
+    font-size: 100%;
+  }
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #ffffff;
+
+  }
+
+  header {
+    position: relative;
+    max-width: 100vw;
+    top:0;
+    height: 4vw;
+    font-weight: bold;
+    color: #F9F9F6;
+    background-color: #444;
+    z-index: 1;
+    padding: 1% 1% 1% 1%;
+}
+
+div {
+    padding: 5px;
+}
+
+header a {
+    font-family: 'Press Start 2P', cursive;
+    float: left;
+    color: #ffffff;
+    text-align: center;
+    padding: 1% 2% 1% 2%;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  /* Change the color of links on hover */
+  navbarheader:hover {
+    color: #898989;
+  }
+
+
+  h1 {
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    font-size: 2rem;
+    padding: 0 3rem;
+  }
+
+  h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    padding: 0 3rem;
+  }
+
+
+
+
+
+    </style>
+</head>
+<!-- END: Head Area -->
+
+
+
+<!--BEGIN: Body Area-->
+<body>
+
+    <!--BEGIN: Header DIV Area-->
+    <header id="header">
+
+
+
+      <!--BEGIN: Links Area-->
+
+          <nav id="navbarheader">
+            <a class="HeaderLink" href="/index">stations</a>
+            <a class="HeaderLink" href="/about">About</a>
+            <a class="HeaderLink" href="/nearest">Nearest</a>
+          </nav>
+    </header>
+
+   <!--BEGIN: BODY Area-->
+    <div id="mainbody-area">
+    <div class='wrapper'>
+    <h1>Welcome to Super Dublin!</h1>
+    <p>Thanks for taking the time to check out Dublinbike, a state-of-the-art solution for planning your journeys around Dublin City Centre, which integrates the power of Machine Learning Models and hyperparameter tuning to help you choose a sustainable method of exploring 5km of Dublin in these uncertain times!</p>
+
+    </p>Completed as part of the COMP30830 Software Engineering module, this application sees to all of the needs of the modern bike commuter. Meeting requirements such as:</b>
+
+<table>
+  <thead>
+    <th>Requirement</th>
+    <th>Name</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+  <tr>
+    <td>1</td>
+    <td>JCDecaux Data</td>
+    <td>Collects data through JCDecaux API</td>
+  </tr>
+    <tr>
+    <td>2</td>
+    <td>Data Managment</td>
+    <td>data management/storage in RDS DB on AWS</td>
+  </tr>
+    <tr>
+    <td>3</td>
+    <td>A Map</td>
+    <td>display bike stations on map</td>
+  </tr>
+    <tr>
+    <td>4</td>
+    <td>Flask-based</td>
+    <td>flask web application (python)</td>
+  </tr>
+    <tr>
+    <td>5</td>
+    <td>Occupancy</td>
+    <td>Station Occupancy information</td>
+  </tr>
+    <tr>
+    <td>6</td>
+    <td>weather</td>
+    <td>Weather information</td>
+  </tr>
+    <tr>
+    <td>7</td>
+    <td>Interactivity</td>
+    <td>Interactivity (click, API request, handle response)</td>
+  </tr>
+    <tr>
+    <td>8</td>
+    <td>Machine Learning Models</td>
+    <td>ML model for predicting occupancy based on weather patterns, trained on collected data</td>
+  </tr>
+    <tr>
+    <td>9</td>
+    <td>EC2 instance</td>
+    <td>project served on a named host over the web on your EC2 instance</td>
+  </tr>
+  </tr>
+    <tr>
+    <td>10</td>
+    <td>Github source-coded</td>
+    <td>Github repo, including source code, logs, commit history, branches, etc</td>
+  </tr>
+  </tbody>
+</table>
+
+
+<h2>Contact us!</h2>
+<p>We are looking forward to hear your thoughts.</p>
+<table>
+  <thead>
+    <th>Team Member</th>
+    <th>Email</th>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Yang Zhilin</td>
+    <td>zhilin.yang@ucdconnect.ie</td>
+  </tr>
+    <tr>
+    <td>Zhong Mengxin</td>
+    <td>mengxin.zhong@ucdconnect.ie</td>
+  </tr>
+    <tr>
+    <td>Cheng Yunpeng</td>
+    <td>yunpeng.cheng@ucdconnect.ie</td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+    </div>
+    <!--END:BODY AREA-->
+
+    <!--BEGIN: Footer Area-->
+    <footer id="footer-area">
+
+      <p class='footer-font'>Created by <a class='footer-link' href='https://www.notion.so/772675f708d14a9a8cfa066076bceef6?v=4fe383aa763d4b2a91a5c81267223db0'>Dublinbike</a></p>
+
+    </footer>
+    <!--END: Footer Area-->
+
+
+  <!--BEGIN: GOOGLE ASYNC at END OF DOM ELEMENTS IN BODY-->
+   <!--END: GOOGLE ASYNC at END OF DOM ELEMENTS IN BODY-->
+
+</body>
+
+</html>
