@@ -93,6 +93,7 @@ header a {
         margin-left: 50%;
         transform: translateX(-50%);
         width: 95%;
+        background-image: url('../static/ajax-loader1.gif');
         background-repeat:no-repeat;
         background-position: center center;
     }
@@ -102,4 +103,29 @@ header a {
     margin: 40px 30px 20px 20px;
     font-size: 16pt;
     font-family: 'Press Start 2P', cursive;
+}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(83, 133, 180);
+  border-color: rgb(151, 150, 168) ;
+  color: black;
+}
+
+.oddTableRow {
+    background-color:rgb(232, 246, 247);
+}
+
+.tableRow { background-color:rgb(246, 253, 253); }
+
+tr {
+    color: black;
+    text-align: center;
+}
+
+tr:hover {background-color: rgba(233, 235, 154, 0.76) ;}
+.selectedTableRow {
+    background-color: rgba(141, 186, 238, 0.76) ;
 }

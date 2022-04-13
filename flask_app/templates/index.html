@@ -10,12 +10,11 @@
 </head>
 <body onload="currentWeather()">
   <header>
-
     <div class="wrapper">
         <nav>
             <a class="HeaderLink" href="/index">Stations</a>
             <a class="HeaderLink" href="/about">About</a>
-            <a class="HeaderLink" href="/nearest">Nearest</a>
+            <a class="HeaderLink" href="/nearest">Find the nearest station</a>
             <div id="MarkerFilter">
                 <h3>Filter markers by availablity of bikes:</h3>
                 <label for="allMarkers">
@@ -45,10 +44,10 @@
             </div>
         </nav>
     </div>
-
 </header>
-  <h1>Lets'a go to Super Dublin World!!!</h1>
+  <h1>Welcome to Super Dublin World!!!</h1>
   <div id="displayWeatherType"></div>
+
   <div id="map"></div>
   <div id="directionsPanel"></div>
 
@@ -63,7 +62,7 @@
     </script>
      <!--Load the google charts library-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>google.load('visualization', '1', {packages: ['corechart', 'bar', 'line']});</script>
+    <script>google.load('visualization', '1', {packages: ['corechart', 'bar', 'line', 'table']});</script>
      <!--Load the AJAX API-->
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <!--Line charts-->
@@ -71,6 +70,19 @@
     <div id="chart_area">
             <div id="daily_chart" class="charts"></div>
             <div id="hour_chart" class="charts"></div>
-            <div id="forecast_chart" class="charts"></div>
+            <div id="forecast_table"></div>
+
+    <h2>BIKE AVAILABILITY PREDICTION</h2>
+    <div id="prediction_date"></div>
+    <script>
+        //predictionDateDropDown();
+    </script>
+
+    <div id="prediction_station"></div>
+    <script>
+        predictionStationDropDown();
+    </script>
+
+    <div id="displayPrediction"></div>
 </body>
 </html>
