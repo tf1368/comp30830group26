@@ -1,5 +1,6 @@
 var currWindow = false;
 let markers = [];
+var date;
 
 
 function initMap() {
@@ -63,6 +64,7 @@ function initMap() {
                 station_info_window.open(map, marker);
                 hourlyChart(station.number);
                 dailyChart(station.number);
+                forecast_weather();
                 });
             });
         }).catch(err => {
@@ -70,7 +72,7 @@ function initMap() {
         });
 }
 
-// Function to return a marker colour depending on the percentage of available bikes remaining
+// Function to return a marker colour depending on the amount of available bikes remaining
 function marker_color(available_bikes, available_stands) {
 
     let bikes_availablity = (available_bikes / (available_bikes + available_stands));
@@ -127,40 +129,42 @@ function currentWeather() {
             data => {
                 console.log("currentWeather: ", data[0]["main"])
                 document.getElementById("displayWeatherType").textContent =
-                    "       Weather: " + data[0]["description"]+
+                    "Weather: " + data[0]["description"]+
                     " Temperature: " + parseInt(data[0]["temp"] -  273.15 ) + "°C"+
-                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C"
-                    // +
-                    // " Humidity: " + data[0]["humidity"] + "%"+
-                    // " Wind speed: " + data[0]["wind_speed"] + "m/s";
+                    " Feels like: " + parseInt(data[0]["feels_like"] -  273.15 ) + "°C";
             })
 }
+
 // Function to graph the average availability by hour for a clicked station
-function forecast_weather(station_number) {
-    fetch("/forecast_weather/"+station_number).then(response => {
+function forecast_weather() {
+    fetch("/weather_forecast").then(response => {
             return response.json();
         }).then(data => {
 
         // Load the chart object from the api
-        chart_data = new google.visualization.DataTable();
+        table_data = new google.visualization.DataTable();
 
-        // Info for the graph such as title
         options = {
-            title: 'Forecast Temperature Per Hour',
-            width: '700', height: '400',
-            hAxis: {title: 'Hour of the Day (00:00)',},
-            vAxis: {title: 'celcius',},
-        };
+               showRowNumber: false,
+               allowHtml: true,
+               width: '50%',
+               height: '100%',
+            };
 
         // Make columns for the chart and specify their type and title
-        chart_data.addColumn('timeofday', "Time of Day");
-        chart_data.addColumn('Temperature', "temp");
+        table_data.addColumn('string',"Date");
+        table_data.addColumn('string', "Weather");
+        table_data.addColumn('number', "Average temperature(°C)");
+        table_data.addColumn('number', "Average wind speed");
         // Add data.
-        for (i = 0; i < data.length; i++) {
-            chart_data.addRow([[data[i]['Hourly'], 0, 0], data[i]['temp']]);
+        for (i = 3; i >= 0; i--) {
+            var date = new Date(data[i]['Daily']).toLocaleDateString('en-ie');
+            table_data.addRows([
+               [date, data[i]['main'], data[i]['Avg_temp'] - 273.15, data[i]['Avg_wind_speed']]
+            ]);
         }
-        chart = new google.visualization.LineChart(document.getElementById('forecast_chart'));
-        chart.draw(chart_data, options);
+        table = new google.visualization.Table(document.getElementById('forecast_table'));
+        table.draw(table_data, options);
     });
 }
 
@@ -246,4 +250,61 @@ function dailyChart(station_number) {
         chart = new google.visualization.ColumnChart(document.getElementById("daily_chart"));
         chart.draw(chart_data, options);
     });
+}
+
+// Prediction Function
+function prediction(station_number) {
+    fetch("/prediction/"+station_number).then(response => {
+        return response.json();
+    }).then(data => {
+    console.log(data)
+    console.log("availabilityPrediction: ", data.Day1)
+    document.getElementById("displayPrediction").textContent =
+                    "[Average Available Bikes] " + "1 Day after: "+ data.Day1 + "; "+ "2 Day after: " + data.Day2 + "; " + "3 Day after: " + data.Day3 + "; " + "4 Day after: " +  data.Day4 + "; "
+    })
+}
+
+// Function to populate the select dropdown menu for prediction
+function predictionStationDropDown() {
+    fetch("/stations").then(response => {
+        return response.json();
+    }).then(data => {
+
+        var station_output = "<form><label for='station_option'>Choose a station: </label>"
+            + "<select name='station_option' id='station_option' onchange='setPredictionValue(this)'>"
+            + "<option value='' disabled selected> ------------------------------------------- </option><br>";
+
+        data.forEach(station => {
+            station_output += "<option value=" + station.number + ">" + station.name + "</option><br>";
+        })
+        station_output += "</select></form>";
+        document.getElementById("prediction_station").innerHTML = station_output;
+    }).catch(err => {
+        console.log("Error:", err);
+    })
+}
+
+// Function to populate the select dropdown menu for prediction
+function predictionDateDropDown() {
+    fetch("/weather_forecast").then(response => {
+            return response.json();
+        }).then(data => {
+
+            var date_output = "<form><label for='future_date'>Future Date:</label>"
+            + "<select name='date_option' id='date_option' >"
+            + "<option value='' disabled selected> ------------------------------------------- </option><br>";
+            for (i = 3; i >= 0; i--) {
+                var date = new Date(data[i]['Daily']).toLocaleDateString('en-ie');
+                date_output += "<option value=" + date + ">" + date + "</option><br>";}
+            date_output += "</select></form>";
+            document.getElementById("prediction_date").innerHTML = date_output;
+        }).catch(err => {
+        console.log("Error:", err);
+    })
+}
+
+// Function to set user choice station and trigger prediction function
+function setPredictionValue(control) {
+    var choice = control.value;
+    prediction(choice);
 }
