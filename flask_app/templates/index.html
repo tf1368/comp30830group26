@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super Dublin World Google Map</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{{ url_for('static', filename='map.css') }}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{{ url_for('static', filename='js.js') }}"></script>
 </head>
 <body onload="currentWeather()">
   <header>
@@ -49,28 +51,30 @@
   <div id="displayWeatherType"></div>
 
   <div id="map"></div>
-  <div id="directionsPanel"></div>
 
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js.js') }}"></script>
-
-    <!-- Replace API_KEY and MAP_ID with your own ones -->
+  <!-- Replace API_KEY and MAP_ID with your own ones -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU&map_ids=c977067f443727f6&callback=initMap">
 
     //api key: AIzaSyAPFUKh9yhgAoe5r0bcJ2CXyLZM2MBKMVU
     //c977067f443727f6
     </script>
+
+
      <!--Load the google charts library-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>google.load('visualization', '1', {packages: ['corechart', 'bar', 'line', 'table']});</script>
      <!--Load the AJAX API-->
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
     <!--Line charts-->
+  <div id="sidePanel">
     <div id="analysis_title"></div>
     <div id="chart_area">
             <div id="daily_chart" class="charts"></div>
             <div id="hour_chart" class="charts"></div>
+        <h2>weather forecast</h2>
             <div id="forecast_table"></div>
+
 
     <h2>BIKE AVAILABILITY PREDICTION</h2>
     <div id="prediction_date"></div>
@@ -82,7 +86,7 @@
     <script>
         predictionStationDropDown();
     </script>
-
-    <div id="displayPrediction"></div>
+        <div id="displayPrediction"></div>
+    </div>
 </body>
 </html>

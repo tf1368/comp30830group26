@@ -10,7 +10,7 @@ function initMap() {
             lat: 53.349804,
             lng: -6.260310
         },
-        zoom: 13.5,
+        zoom: 15,
         mapId: 'c977067f443727f6',
         mapTypeControl: false,
         fullscreenControl: false,
@@ -181,7 +181,7 @@ function hourlyChart(station_number) {
         // Info for the graph such as title
         options = {
             title: 'Average Availability Per Hour',
-            width: '700', height: '400',
+            width: '300', height: '200',
             hAxis: {title: 'Hour of the Day (00:00)',},
             vAxis: {title: 'Number of Available Bikes'}
         };
@@ -232,7 +232,7 @@ function dailyChart(station_number) {
          chart_data = new google.visualization.DataTable();
          options = {
              title: 'Average Availability Per Day',
-             width: '700', height: '400',
+             width: '300', height: '200',
              vAxis: {
                 title: 'Number of Bikes'
              }
