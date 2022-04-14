@@ -8,7 +8,6 @@
     <!--SEO-->
     <meta http-equiv="about" content="text/html; charset=utf-8">
     <meta name="About" content="More Info of Dublin Bikes">
-    <meta name="keywords" content="Dublin Bikes, Availability, Google Map API, More Info, Author">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
@@ -119,67 +118,67 @@ header a {
     <div id="mainbody-area">
     <div class='wrapper'>
     <h1>Welcome to Super Dublin!</h1>
-    <p>Thanks for taking the time to check out Dublinbike, a state-of-the-art solution for planning your journeys around Dublin City Centre, which integrates the power of Machine Learning Models and hyperparameter tuning to help you choose a sustainable method of exploring 5km of Dublin in these uncertain times!</p>
+    <p>On this website, there are 3 pages.
+        1.Index page: This page contains all the stations on map.
+        You can filter stations based on availability,
+        the Markers are colored based on the availability of bikes.
+        Also, you can check weather info to see if it's a good time to bicycling.
 
-    </p>Completed as part of the COMP30830 Software Engineering module, this application sees to all of the needs of the modern bike commuter. Meeting requirements such as:</b>
+        2.About page: This page contains information about how we met all the requirements.
+        3.Find the Nearest station page:
+        This page contains information about the nearest station,
+        the nearest station is calculated based on the user's location.</p>
+
+    </p>Final project for COMP30830 Software Engineering module,
+        this application sees to all of the needs of the modern bike commuter. Meeting requirements such as:</b>
 
 <table>
   <thead>
-    <th>Requirement</th>
-    <th>Name</th>
-    <th>Description</th>
+    <th>requirement</th>
+    <th>How we meet the requirement</th>
   </thead>
   <tbody>
   <tr>
-    <td>1</td>
     <td>JCDecaux Data</td>
     <td>Collects data through JCDecaux API</td>
   </tr>
     <tr>
-    <td>2</td>
     <td>Data Managment</td>
     <td>data management/storage in RDS DB on AWS</td>
   </tr>
     <tr>
-    <td>3</td>
-    <td>A Map</td>
     <td>display bike stations on map</td>
+    <td>Map style and station markers are customised into Super Mario style</td>
   </tr>
     <tr>
-    <td>4</td>
-    <td>Flask-based</td>
     <td>flask web application (python)</td>
+    <td>Use flask framework for the backend</td>
   </tr>
     <tr>
-    <td>5</td>
-    <td>Occupancy</td>
     <td>Station Occupancy information</td>
+        <td>Click on each station, there will be a popup info window</td>
   </tr>
     <tr>
-    <td>6</td>
-    <td>weather</td>
-    <td>Weather information</td>
+    <td>weather information</td>
+    <td>current weather is just above the map </td>
   </tr>
     <tr>
-    <td>7</td>
-    <td>Interactivity</td>
     <td>Interactivity (click, API request, handle response)</td>
+    <td>click on Station filter, station input for prediction and stations on the map, proper response will happen</td>
   </tr>
     <tr>
-    <td>8</td>
     <td>Machine Learning Models</td>
-    <td>ML model for predicting occupancy based on weather patterns, trained on collected data</td>
+    <td>Random forest model for predicting occupancy based on weather patterns, trained on collected data</td>
   </tr>
     <tr>
-    <td>9</td>
     <td>EC2 instance</td>
-    <td>project served on a named host over the web on your EC2 instance</td>
+    <td>project served on a named host on the EC2 instance
+        (made a mistake of choosing a US host instead of Dublin, so the delay is quite massive)</td>
   </tr>
   </tr>
     <tr>
-    <td>10</td>
     <td>Github source-coded</td>
-    <td>Github repo, including source code, logs, commit history, branches, etc</td>
+    <td>https://github.com/tf1368/comp30830group26/tree/main</td>
   </tr>
   </tbody>
 </table>
@@ -215,7 +214,7 @@ header a {
     <!--BEGIN: Footer Area-->
     <footer id="footer-area">
 
-      <p class='footer-font'>Created by <a class='footer-link' href='https://www.notion.so/772675f708d14a9a8cfa066076bceef6?v=4fe383aa763d4b2a91a5c81267223db0'>Dublinbike</a></p>
+      <p class='footer-font'>Created by <a class='footer-link' href='https://www.notion.so/772675f708d14a9a8cfa066076bceef6?v=4fe383aa763d4b2a91a5c81267223db0'>Super Dublin Bike</a></p>
 
     </footer>
     <!--END: Footer Area-->
