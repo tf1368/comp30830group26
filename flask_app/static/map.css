@@ -48,6 +48,7 @@ header a {
   }
 
 
+
 #MarkerFilter {
     font-family: 'Press Start 2P', cursive;
     float: center;
@@ -73,27 +74,37 @@ header a {
   }
 
   #map {
-    height: 75vh;
+      float: left;
+      height: 75vh;
+      width: 70%;
+
   }
 
   .gm-style-iw-d {
     color: #000000;
   }
-
+#sidePanel {
+    float: right;
+    justify-content: center;
+    height: 70%;
+    width: 30%;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #444;
+}
   #chart_area {
-        height: 65%;
+        height: 70%;
         width: 100%;
         display: flex;
         flex-direction: column;
         background-color: inherit;
         justify-content: center;
+      float: right;
+
     }
 
     .charts {
-        margin-left: 50%;
-        transform: translateX(-50%);
-        width: 95%;
-        background-image: url('../static/ajax-loader1.gif');
+
+        width: 30%;
         background-repeat:no-repeat;
         background-position: center center;
     }
