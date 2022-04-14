@@ -1,6 +1,7 @@
 var currWindow = false;
 let markers = [];
-var date;
+var prediction_time;
+var prediction_station;
 
 
 function initMap() {
@@ -253,58 +254,82 @@ function dailyChart(station_number) {
 }
 
 // Prediction Function
-function prediction(station_number) {
-    fetch("/prediction/"+station_number).then(response => {
+function prediction(station_number,time) {
+    console.log("In prediction function" + station_number + time)
+
+    fetch("/prediction/"+station_number+"/"+time).then(response => {
         return response.json();
     }).then(data => {
-    console.log(data)
-    console.log("availabilityPrediction: ", data.Day1)
-    document.getElementById("displayPrediction").textContent =
-                    "[Average Available Bikes] " + "1 Day after: "+ data.Day1 + "; "+ "2 Day after: " + data.Day2 + "; " + "3 Day after: " + data.Day3 + "; " + "4 Day after: " +  data.Day4 + "; "
+
+        console.log(data)
+        console.log("availabilityPrediction: ", data.bikes)
+
+        document.getElementById("displayPrediction").textContent =
+                    "Available Bikes: " + + data.bikes
     })
 }
 
-// Function to populate the select dropdown menu for prediction
+// Function to populate the select dropdown menu for prediction station
 function predictionStationDropDown() {
     fetch("/stations").then(response => {
         return response.json();
     }).then(data => {
 
         var station_output = "<form><label for='station_option'>Choose a station: </label>"
-            + "<select name='station_option' id='station_option' onchange='setPredictionValue(this)'>"
+            + "<select name='station_option' id='station_option' onchange='setPredictionStation(this)'>"
             + "<option value='' disabled selected> ------------------------------------------- </option><br>";
 
         data.forEach(station => {
             station_output += "<option value=" + station.number + ">" + station.name + "</option><br>";
         })
-        station_output += "</select></form>";
+
+        station_output += "</select></form><button type=\"button\" onclick='setPredictionValue()'>predict</button> ";
         document.getElementById("prediction_station").innerHTML = station_output;
+
     }).catch(err => {
         console.log("Error:", err);
     })
 }
 
-// Function to populate the select dropdown menu for prediction
+// Function to populate the select dropdown menu for prediction time
 function predictionDateDropDown() {
-    fetch("/weather_forecast").then(response => {
+    fetch("/weather_forecast_time").then(response => {
             return response.json();
         }).then(data => {
 
+            console.log("predictionDateDropDown:", data);
+
             var date_output = "<form><label for='future_date'>Future Date:</label>"
-            + "<select name='date_option' id='date_option' >"
+            + "<select name='date_option' id='date_option' onchange='setPredictionTime(this)'>"
             + "<option value='' disabled selected> ------------------------------------------- </option><br>";
-            for (i = 3; i >= 0; i--) {
-                var date = new Date(data[i]['Daily']).toLocaleDateString('en-ie');
-                date_output += "<option value=" + date + ">" + date + "</option><br>";}
+
+            for (i = 95; i >= 0; i--) {
+                var date = new Date(data[i]['Daily']);
+                date_output += "<option value="+data[i]['Daily']/1000+">" + date + "</option><br>";}
+
             date_output += "</select></form>";
+
             document.getElementById("prediction_date").innerHTML = date_output;
+
         }).catch(err => {
         console.log("Error:", err);
     })
 }
 
-// Function to set user choice station and trigger prediction function
-function setPredictionValue(control) {
-    var choice = control.value;
-    prediction(choice);
+// Function to set user choice prediction time
+function setPredictionTime(control) {
+    prediction_time = control.value;
+    console.log("setPredictionTime: " + prediction_time)
+}
+
+// Function to set user choice station
+function setPredictionStation(control) {
+    prediction_station = control.value;
+    console.log("setPredictionTime: " + prediction_station)
+}
+
+// Function to trigger prediction function
+function setPredictionValue() {
+    console.log("setPredictionValue: " + prediction_station + prediction_time)
+    prediction(prediction_station,prediction_time);
 }
