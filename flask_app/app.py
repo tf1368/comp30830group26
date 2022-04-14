@@ -332,22 +332,6 @@ def predict(station_number, time):
     prediction_dict = {"bikes": prediction_list[0]}
     result = json.dumps(prediction_dict)
 
-    # prediction_list = []
-    # for i in [3,2,1,0]:
-    #availability_prediction = rfc1.predict([[station_number, df1["bike_stands"], df1["position_lat"],
-                                             #df1["position_long"], 0.965926, 0.258819, df2.loc[i:i, "Avg_temp"],
-                                             #df2.loc[i:i, "Avg_pressure"], df2.loc[i:i, "Avg_humidity"],
-                                             #df2.loc[i:i, "Avg_visibility"], df2.loc[i:i, "Avg_wind_speed"],
-                                             #df2.loc[i:i, "Avg_wind_degree"], df2.loc[i:i, "Avg_clouds_all"], True]])
-    # print(availability_prediction)
-    # prediction_list.append(availability_prediction[0])
-
-
-    # print(prediction_list)
-    # prediction_dict = {"Day1": prediction_list[0],"Day2":prediction_list[1],"Day3":prediction_list[2],"Day4":prediction_list[3]}
-    # print(prediction_dict)
-    # result = json.dumps(prediction_dict, cls=NpEncoder)
-
     print("predict() finish!\n\n")
 
     return result
