@@ -103,7 +103,7 @@ header a {
     }
 
     .charts {
-        transform: translateX(-50%);
+
         width: 30%;
         background-repeat:no-repeat;
         background-position: center center;
