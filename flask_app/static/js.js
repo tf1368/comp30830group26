@@ -299,7 +299,7 @@ function predictionDateDropDown() {
 
             console.log("predictionDateDropDown:", data);
 
-            var date_output = "<form><label for='future_date'>Future Date:</label>"
+            var date_output = "<form><label for='future_date'>choose an hour in the next 4 days:</label>"
             + "<select name='date_option' id='date_option' onchange='setPredictionTime(this)'>"
             + "<option value='' disabled selected> ------------------------------------------- </option><br>";
 

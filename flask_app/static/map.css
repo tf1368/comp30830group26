@@ -76,7 +76,7 @@ header a {
   #map {
       float: left;
       height: 75vh;
-      width: 70%;
+      width: 55%;
 
   }
 
@@ -87,26 +87,26 @@ header a {
     float: right;
     justify-content: center;
     height: 70%;
-    width: 30%;
+    width: 45%;
     font-family: 'Press Start 2P', cursive;
     background-color: #444;
 }
   #chart_area {
         height: 70%;
-        width: 100%;
+        width: 45%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         background-color: inherit;
-        justify-content: center;
-      float: right;
+        justify-content: left;
+
 
     }
 
-    .charts {
+    .chart {
 
-        width: 30%;
-        background-repeat:no-repeat;
-        background-position: center center;
+        width: 20%;
+        /*background-repeat:no-repeat;*/
+        /*background-position: right;*/
     }
 
 #displayWeatherType {
