@@ -100,7 +100,7 @@ API_info = {
                        'API Key': '4387022fe20300335656359a13903a56'},
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     'OpenWeatherforecastAPI': {'Service Provider': 'OpenWeatherMap', 'API Reason': 'Weather Data', 'Security': 'secret',
-                               'URL': {'weather_at_coord': 'https://api.openweathermap.org/data/2.5/forecast'},
+                               'URL': {'weather_at_coord': 'https://pro.openweathermap.org/data/2.5/forecast/hourly'},
                                'API Key': '9e8e9b03bd9760816f4f624a692d09c4'}
     # https://pro.openweathermap.org/data/2.5/forecast/hourly?lat={lat}&lon={lon}&appid={API key}
     # api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
