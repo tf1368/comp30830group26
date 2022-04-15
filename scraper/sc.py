@@ -274,7 +274,7 @@ def insert_station_static_data(bike_json, existing_station, engine):
     """function to insert the data into the database"""
 
     print("insert_station_static_values() in operation\n\n")
-
+    engine.execute('''DELETE FROM dbikes.forecast''')
     station_list = existing_station
     datetime_now = dt.datetime.now()
     created_date = dt.datetime.timestamp(datetime_now)
