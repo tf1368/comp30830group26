@@ -48,6 +48,7 @@ header a {
   }
 
 
+
 #MarkerFilter {
     font-family: 'Press Start 2P', cursive;
     float: center;
@@ -73,29 +74,39 @@ header a {
   }
 
   #map {
-    height: 75vh;
+      float: left;
+      height: 75vh;
+      width: 55%;
+
   }
 
   .gm-style-iw-d {
     color: #000000;
   }
-
+#sidePanel {
+    float: right;
+    justify-content: center;
+    height: 70%;
+    width: 45%;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #444;
+}
   #chart_area {
-        height: 65%;
-        width: 100%;
+        height: 70%;
+        width: 45%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         background-color: inherit;
-        justify-content: center;
+        justify-content: left;
+
+
     }
 
-    .charts {
-        margin-left: 50%;
-        transform: translateX(-50%);
-        width: 95%;
-        background-image: url('../static/ajax-loader1.gif');
-        background-repeat:no-repeat;
-        background-position: center center;
+    .chart {
+
+        width: 20%;
+        /*background-repeat:no-repeat;*/
+        /*background-position: right;*/
     }
 
 #displayWeatherType {
@@ -103,4 +114,29 @@ header a {
     margin: 40px 30px 20px 20px;
     font-size: 16pt;
     font-family: 'Press Start 2P', cursive;
+}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(83, 133, 180);
+  border-color: rgb(151, 150, 168) ;
+  color: black;
+}
+
+.oddTableRow {
+    background-color:rgb(232, 246, 247);
+}
+
+.tableRow { background-color:rgb(246, 253, 253); }
+
+tr {
+    color: black;
+    text-align: center;
+}
+
+tr:hover {background-color: rgba(233, 235, 154, 0.76) ;}
+.selectedTableRow {
+    background-color: rgba(141, 186, 238, 0.76) ;
 }
